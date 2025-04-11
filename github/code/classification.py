@@ -6,12 +6,8 @@ import lightgbm as lgb
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_curve, auc, \
     precision_recall_curve, average_precision_score
 
-
-
-# 初始化十折交叉验证
 kf = StratifiedKFold(n_splits=10, shuffle=True, random_state=12)
 
-# 初始化存储结果的列表
 accuracies, precisions, recalls, f1s, roc_aucs, avg_precisions = [], [], [], [], [], []
 all_yrecalls, all_xprecisions = [], []
 
@@ -27,7 +23,6 @@ params = {
     'random_state': 12
 }
 
-# 交叉验证
 for train_index, test_index in kf.split(X, y):
     X_train, X_test = X.iloc[train_index], X.iloc[test_index]
     y_train, y_test = y.iloc[train_index], y.iloc[test_index]
@@ -49,7 +44,6 @@ for train_index, test_index in kf.split(X, y):
         valid_sets=[valid_data],
         callbacks=[early_stopping_callback, log_callback]
     )
-    # 输出最佳迭代次数
     print(f"Best iteration for this fold: {clf.best_iteration}")
 
     y_pred = clf.predict(X_test, num_iteration=clf.best_iteration)
@@ -67,7 +61,6 @@ for train_index, test_index in kf.split(X, y):
     all_yrecalls.append(yrecall)
     all_xprecisions.append(xprecision)
 
-    # 将结果添加到列表
     accuracies.append(accuracy)
     precisions.append(precision)
     recalls.append(recall)
@@ -88,7 +81,6 @@ std_roc_auc = np.std(roc_aucs)
 mean_avg_precision = np.mean(avg_precisions)
 std_avg_precision = np.std(avg_precisions)
 
-# 打印评估指标
 print("Mean Accuracy: {:.4f} ± {:.4f}".format(mean_accuracy, std_accuracy))
 print("Mean Precision: {:.4f} ± {:.4f}".format(mean_precision, std_precision))
 print("Mean Recall: {:.4f} ± {:.4f}".format(mean_recall, std_recall))
