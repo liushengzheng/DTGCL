@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch_geometric.data import Data
-from torch_geometric.nn import GCNConv  #
+from torch_geometric.nn import GCNConv  
 import pandas as pd  
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
