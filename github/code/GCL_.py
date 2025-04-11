@@ -2,11 +2,10 @@ import torch
 import torch.nn.functional as F
 from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv  #
-import pandas as pd  # 用于数据处理的库
+import pandas as pd  
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 
-# 定义图神经网络模型类
 class GCL_GCN(torch.nn.Module):
     def __init__(self, feature_dim, hidden_dim):
         super(GCL_GCN, self).__init__()
@@ -18,7 +17,6 @@ class GCL_GCN(torch.nn.Module):
         x = self.conv2(x, edge_index)
         return x
 
-# 数据增强函数：特征掩码
 def feature_masking(data, mask_rate=0.2, transaction_data=None):
 
     transaction_counts = transaction_data['total_transactions'].values
@@ -30,7 +28,6 @@ def feature_masking(data, mask_rate=0.2, transaction_data=None):
     data.x = data.x * mask.float()
     return data
 
-# 数据增强函数：边扰动
 def edge_perturbation(data, edges_df, perturb_rate=0.2, beta_T=0.5, beta_A=0.5):
     edge_index = data.edge_index
     from_nodes = edge_index[0]
@@ -73,7 +70,6 @@ def edge_perturbation(data, edges_df, perturb_rate=0.2, beta_T=0.5, beta_A=0.5):
 
 def contrastive_loss(embedding_1, embedding_2, margin=1.0):
 
-    # 计算余弦相似度
     cosine_similarity = F.cosine_similarity(embedding_1, embedding_2)
 
     positive_loss = torch.mean(1 - cosine_similarity)
